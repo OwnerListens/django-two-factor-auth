@@ -1,21 +1,122 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>{% block title %}{% endblock %}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" media="screen">
-  <script defer src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  {% block extra_media %}{% endblock %}
-</head>
-<body>
-  <div class="alert alert-success"><p class="container">Provide a template named
-    <code>two_factor/_base.html</code> to style this page and remove this message.</p></div>
+{% extends "new_base.html" %}
+{% load common %}
 
-  {% block content_wrapper %}
-    <div class="container">
-      {% block content %}{% endblock %}
+{% block head %}
+<style>
+.sign_up {
+    max-width: 550px;
+}
+.sign_up p { font-size: 1.1em; }
+ul.errorlist {
+    position: absolute;
+    top: 50px;
+    color: red;
+    font-size: 0.8em;
+    line-height: 1.1em;
+}
+
+.center_table {
+    width: 100%;
+    margin: 0 auto 20px;
+    position: relative;
+}
+.center_table input {
+    width: 100%;
+}
+.center_table th {
+    padding-bottom: 15px;
+}
+.center_table label{
+    line-height: 50px;
+}
+.wizard_actions_container {
+    text-align: center;
+}
+</style>
+{% endblock %}
+{% block header %}
+    <header id="header">
+    	<div class="wrap clearfix">
+            <a href="{{ HOME }}" id="logo" class="left">
+                <img class="logo left" src="{{ STATIC_URL }}img/{{ SITE_CONTEXT.LOGO.new|default:SITE_CONTEXT.LOGO.default}}">
+            </a>
+            <nav class="header_nav right">
+                <div class="clear"></div>
+            	<ul>
+                    <li class="callus blue mm_cta_link"><a href="sms:{{ PHONE }}"><span class="_invisible-sm">Text or Call Us:</span> {{ PHONE|format_phone }}&nbsp;&nbsp;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+{% endblock header %}
+
+{% block content_container %}
+    <div id="main_content" class="grey_bg" style="padding-top: 0;">
+    <div class="default_banner">
+    	<div class="banner_bg">
+
+        	<div class="wrap">
+{#               {% if user.is_authenticated %}#}
+                <h2>{% block title %}{% endblock %}</h2>
+{#                {% endif %}#}
+            </div>
+
+        </div>
+        <div class="colors_divider clearfix" id="banner_divider">
+            <div class="color blue"></div>
+            <div class="color beige"></div>
+            <div class="color orange"></div>
+            <div class="color red"></div>
+            <div class="color purple"></div>
+        </div>
+
     </div>
-  {% endblock %}
-</body>
-</html>
+
+    <section class="sign_up">
+
+    	<div class="wrap">
+        {% block content %}
+        {% endblock content %}
+        </div>
+
+    </section>
+    </div><!--end main_content-->
+{% endblock content_container %}
+
+{% block endjs %}
+<script>
+function required_satisfied() {
+    var res = true;
+    $('input.required').each(function(){
+        if($(this).val() === ''){
+            res = false;
+        }
+    });
+    return res;
+}
+function check_form_requirements() {
+    satisfied = required_satisfied();
+    $('#sign_up_button .form_btn').toggleClass('disabled', !satisfied).find('input[type=submit]').prop("disabled", !satisfied);
+}
+$(function(){
+    setTimeout(check_form_requirements, 200);
+    $('input[name=username]').blur(function(){
+        if(this.value != null && $('input[name=msg_email]').val() == ''){
+            $('input[name=msg_email]').val(this.value);
+        }
+    });
+    $('input').on('keyup focus', check_form_requirements);
+    $('form.sign_up_form').submit(function(){
+        if(required_satisfied() === false) {
+            return false;
+        }
+        $('input[name=username]').val($('input[name=username]').val().toLowerCase());
+        $('#sign_up_success').show();
+    });
+});
+</script>
+{% endblock endjs %}
+
+{% block footer %}
+    {% with hide_pricing=True %}{{ block.super }}{% endwith %}
+{% endblock footer %}

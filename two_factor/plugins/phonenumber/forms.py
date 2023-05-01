@@ -9,20 +9,22 @@ from .validators import validate_international_phonenumber
 class PhoneNumberMethodForm(forms.ModelForm):
     number = forms.CharField(label=_("Phone Number"),
                              validators=[validate_international_phonenumber])
-    method = forms.ChoiceField(widget=forms.RadioSelect, label=_('Method'))
+    # method = forms.ChoiceField(widget=forms.RadioSelect, label=_('Method'))
+    method = forms.CharField(widget=forms.HiddenInput, label=_('Method'), initial="sms")
 
     class Meta:
         model = PhoneDevice
-        fields = ['number', 'method']
+        # fields = ['number', 'method']
+        fields = ['number']
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.fields['method'].choices = get_available_phone_methods()
+        # self.fields['method'].choices = get_available_phone_methods()
 
 
 class PhoneNumberForm(forms.ModelForm):
     # Cannot use PhoneNumberField, as it produces a PhoneNumber object, which cannot be serialized.
-    number = forms.CharField(label=_("Phone Number"),
+    number = forms.CharField(required=False, label=_("Phone Number"),
                              validators=[validate_international_phonenumber])
 
     class Meta:

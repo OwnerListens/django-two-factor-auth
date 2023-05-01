@@ -1,16 +1,27 @@
 {% extends "two_factor/_base_focus.html" %}
 {% load i18n %}
 
+{% block head %}
+{{ block.super }}
+<style>
+    #id_setup-method input { width: unset; }
+    {% if wizard.steps.current == 'validation' %}
+      .sign_up { text-align: center }
+      .center_table { max-width: 300px; }
+      .center_table th{ text-align: right; padding-right: 10px; }
+      .center_table input { width: unset; }
+    {% endif %}
+
+</style>
+{% endblock %}
+
+{% block title %}{% trans "Add Backup Phone" %}{% endblock %}
 {% block content %}
-  <h1>{% block title %}{% trans "Add Backup Phone" %}{% endblock %}</h1>
 
   {% if wizard.steps.current == 'setup' %}
-      <p>{% blocktrans trimmed %}You'll be adding a backup phone number to your
-        account. This number will be used if your primary method of
-        registration is not available.{% endblocktrans %}</p>
+      <p>This number will only be used if your primary method of verification is not available.</p>
   {% elif wizard.steps.current == 'validation' %}
-      <p>{% blocktrans trimmed %}We've sent a token to your phone number. Please
-        enter the token you've received.{% endblocktrans %}</p>
+      <p>We sent a verification code to your phone. Please enter it here.</p>
   {% endif %}
 
   <form action="" method="post">{% csrf_token %}

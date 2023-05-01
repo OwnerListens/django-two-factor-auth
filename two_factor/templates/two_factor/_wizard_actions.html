@@ -1,14 +1,15 @@
 {% load i18n %}
-
+<div class="wizard_actions_container">
 {% if cancel_url %}
   <a href="{{ cancel_url }}"
-     class="float-right btn btn-link">{% trans "Cancel" %}</a>
+     class="float-right btn btn-link cancel-link" style="line-height: 44px; margin-right: 10px;">{% trans "Cancel" %}</a>
 {% endif %}
 {% if wizard.steps.prev %}
   <button name="wizard_goto_step" type="submit"
           value="{{ wizard.steps.prev }}"
-          class="btn btn-secondary">{% trans "Back" %}</button>
+          class="smaller button blue2">{% trans "Back" %}</button>
 {% else %}
-  <button disabled name="" type="button" class="btn">{% trans "Back" %}</button>
+  <button disabled name="" type="button" class="button smaller back-button">{% trans "Back" %}</button>
 {% endif %}
-<button type="submit" class="btn btn-primary">{% trans "Next" %}</button>
+<button type="submit" class="smaller button blue2 next-button" style="margin-left: 10px;">{% trans "Next" %}</button>
+</div>

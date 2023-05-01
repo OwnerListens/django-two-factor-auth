@@ -2,8 +2,8 @@
 {% load i18n %}
 {% load two_factor_tags %}
 
+{% block title %}{% trans "Account Security" %}{% endblock %}
 {% block content %}
-  <h1>{% block title %}{% trans "Account Security" %}{% endblock %}</h1>
 
   {% if default_device %}
     <p>{% blocktrans with primary=default_device|as_action %}Primary method: {{ primary }}{% endblocktrans %}</p>
@@ -42,7 +42,7 @@
     <p><a href="{% url 'two_factor:backup_tokens' %}"
           class="btn btn-info">{% trans "Show Codes" %}</a></p>
 
-    <h3>{% trans "Disable Two-Factor Authentication" %}</h3>
+    <h2>{% trans "Disable Two-Factor Authentication" %}</h2>
     <p>{% blocktrans trimmed %}However we strongly discourage you to do so, you can
       also disable two-factor authentication for your account.{% endblocktrans %}</p>
     <p><a class="btn btn-secondary" href="{% url 'two_factor:disable' %}">

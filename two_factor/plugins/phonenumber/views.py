@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.shortcuts import redirect, resolve_url
 from django.views.decorators.cache import never_cache
 from django.views.generic import DeleteView
@@ -27,7 +26,7 @@ class PhoneSetupView(IdempotentSessionWizardView):
     numbers can be used for verification.
     """
     template_name = 'two_factor/core/phone_register.html'
-    success_url = settings.LOGIN_REDIRECT_URL
+    success_url = "two_factor:profile"
     form_list = (
         ('setup', PhoneNumberMethodForm),
         ('validation', DeviceValidationForm),
@@ -93,7 +92,7 @@ class PhoneDeleteView(DeleteView):
     """
     View for removing a phone number used for verification.
     """
-    success_url = settings.LOGIN_REDIRECT_URL
+    success_url = "two_factor:profile"
 
     def get_queryset(self):
         return self.request.user.phonedevice_set.filter(name='backup')

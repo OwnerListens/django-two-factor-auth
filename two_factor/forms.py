@@ -27,13 +27,13 @@ class MethodForm(forms.Form):
 
 
 class DeviceValidationForm(forms.Form):
-    token = forms.IntegerField(label=_("Token"), min_value=1, max_value=int('9' * totp_digits()))
+    token = forms.IntegerField(required=False, label=_("Code"), min_value=1, max_value=int('9' * totp_digits()), widget=forms.TextInput)
 
     token.widget.attrs.update({'autofocus': 'autofocus',
                                'inputmode': 'numeric',
                                'autocomplete': 'one-time-code'})
     error_messages = {
-        'invalid_token': _('Entered token is not valid.'),
+        'invalid_token': _('Invalid code. Please try again'),
     }
 
     def __init__(self, device, **kwargs):
@@ -41,21 +41,21 @@ class DeviceValidationForm(forms.Form):
         self.device = device
 
     def clean_token(self):
-        token = self.cleaned_data['token']
-        if not self.device.verify_token(token):
-            raise forms.ValidationError(self.error_messages['invalid_token'])
+        token = self.cleaned_data["token"]
+        if not token or not self.device.verify_token(token):
+            raise forms.ValidationError(self.error_messages["invalid_token"])
         return token
 
 
 class TOTPDeviceForm(forms.Form):
-    token = forms.IntegerField(label=_("Token"), min_value=0, max_value=int('9' * totp_digits()))
+    token = forms.IntegerField(required=False, label=_("Code"), min_value=0, max_value=int('9' * totp_digits()), widget=forms.TextInput)
 
     token.widget.attrs.update({'autofocus': 'autofocus',
                                'inputmode': 'numeric',
                                'autocomplete': 'one-time-code'})
 
     error_messages = {
-        'invalid_token': _('Entered token is not valid.'),
+        'invalid_token': _('Invalid code. Please try again'),
     }
 
     def __init__(self, key, user, metadata=None, **kwargs):

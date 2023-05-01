@@ -34,8 +34,9 @@ class PhoneMethodBase(MethodBase):
             return _('Call number %s') % number
 
     def get_verbose_action(self, device):
-        if device.method == 'sms':
-            return _('We sent you a text message, please enter the token we sent.')
+        number = format_phone_number(device.number)
+        if device.method == "sms":
+            return f"Please enter the verification code we sent to your phone ending in {number[-4:]}"
         else:
             return _('We are calling your phone right now, please enter the digits you hear.')
 
@@ -47,4 +48,4 @@ class PhoneCallMethod(PhoneMethodBase):
 
 class SMSMethod(PhoneMethodBase):
     code = 'sms'
-    verbose_name = _('Text message')
+    verbose_name = _('Text message (your carrier\'s standard messaging rates apply)')

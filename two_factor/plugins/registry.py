@@ -52,7 +52,7 @@ class MethodBase:
 
 class GeneratorMethod(MethodBase):
     code = 'generator'
-    verbose_name = _('Token generator')
+    verbose_name = _('Authentication app (Google, Microsoft, Authy, etc.)')
     form_path = 'two_factor.forms.TOTPDeviceForm'
 
     def get_devices(self, user):

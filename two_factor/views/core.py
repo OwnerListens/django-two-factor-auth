@@ -445,7 +445,7 @@ class SetupView(RedirectURLMixin, IdempotentSessionWizardView):
     session_key_name = 'django_two_factor-qr_secret_key'
     initial_dict = {}
     form_list = (
-        ('welcome', Form),
+        # ('welcome', Form),
         ('method', MethodForm),
         # Other forms are dynamically added in get_form_list()
     )
@@ -621,6 +621,7 @@ class SetupView(RedirectURLMixin, IdempotentSessionWizardView):
             })
         elif self.steps.current == 'validation':
             context['device'] = self.get_device()
+            context['masked_number'] = self.get_device().number.as_e164[-4:]
         context['cancel_url'] = resolve_url(settings.LOGIN_REDIRECT_URL)
         return context
 

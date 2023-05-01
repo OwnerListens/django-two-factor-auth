@@ -6,11 +6,34 @@
   {{ form.media }}
 {% endblock %}
 
+{% block head %}
+{{ block.super }}
+<style>
+{% if wizard.steps.current == 'auth' %}
+ul.errorlist { top: 115px; }
+.wizard_actions_container {
+    text-align: right;
+    margin: 0 15px;
+}
+.wizard_actions_container .cancel-link{
+    display: none;
+}
+.wizard_actions_container .back-button{
+    display: none;
+}
+.wizard_actions_container .next-button{
+    width: 75%;
+}
+{% elif wizard.steps.current == 'token' %}
+
+{% endif %}
+</style>
+{% endblock %}
+
+{% block title %}{% trans "Login" %}{% endblock %}
 {% block content %}
-  <h1>{% block title %}{% trans "Login" %}{% endblock %}</h1>
 
   {% if wizard.steps.current == 'auth' %}
-    <p>{% blocktrans %}Enter your credentials.{% endblocktrans %}</p>
   {% elif wizard.steps.current == 'token' %}
     <p>{{ device|as_verbose_action }}</p>
   {% elif wizard.steps.current == 'backup' %}
@@ -35,6 +58,19 @@
         </button>
       {% endfor %}</p>
     {% endif %}
+
+    {% if wizard.steps.current == 'auth' %}
+      <table class="center_table" style="margin-bottom: 10px;">
+        <tbody>
+          <tr>
+              <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+              <td><a href="{% url 'password_reset' %}">Forgot password</a></td>
+          </tr>
+        </tbody>
+      </table>
+    {% endif %}
+    </span>
+</div>
 
     {% include "two_factor/_wizard_actions.html" %}
   </form>
